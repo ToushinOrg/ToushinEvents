@@ -1,0 +1,140 @@
+
+<html>
+    <head>
+        <title>Toushin Events</title>
+        <meta name="description" content="Website that shows the schedule of Toushin events and allows for adding to calendar apps.">
+        <!--
+        based on code from https://github.com/madekuji/aonaharajp
+        -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://apis.google.com/js/api.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.7/jstz.js"></script>
+        <script type="text/javascript">
+            window.onload = function begin()
+            {
+                var timezone = encodeURIComponent(jstz.determine().name()); 
+                var pref = '<iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;bgcolor=%23ffffff&amp;ctz=';
+                var suff = '&amp;src=ZTFyaDFmN2I2ZnZlaWI5dGtiMWJmY21oMzBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%234285F4&amp;mode=WEEK&amp;showNav=0&amp;showTitle=0&amp;showTabs=1&amp;showPrint=0&amp;showCalendars=0&amp;showDate=1" style="border:solid 1px #777" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>';
+                var iframe_html = pref + timezone + suff;
+                document.getElementById('cal').innerHTML = iframe_html;
+                // Set the date we're counting down to
+                var countDownDate = new Date("Mar 28, 2021 6:30:00 GMT+0900").getTime();
+
+                var className = "non-difficult class"
+
+                // Update the count down every 1 second
+                var x = setInterval(function() {
+
+                    // Get today's date and time
+                    var now = new Date().getTime();
+                        
+                    // Find the distance between now and the count down date
+                    var distance = countDownDate - now;
+                        
+                    // Time calculations for days, hours, minutes and seconds
+                    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    // Output the result in an element with id="demo"
+                    document.getElementById("countdown").innerHTML = "Next event: " + className + "<br>" + "starts in: " + days + "d " + hours + "h "
+                    + minutes + "m " + seconds + "s ";
+                    //document.getElementById("countdown").innerHTML = "Waiting for next week's schedule..."
+                        
+                    // If the count down is over, write some text 
+                    if (distance < 0) {
+                        clearInterval(x);
+                        document.getElementById("countdown").innerHTML = "Next event: " + className + "<br>" + "<b>CLASS IN SESSION</b>";
+                        //playbell();
+                    }
+                }, 1000);
+            }
+            function playbell(){
+                var audio = new Audio('bell.opus');
+                audio.play();
+            }
+
+            function copy() {
+                            navigator.clipboard.writeText("https://calendar.google.com/calendar/ical/e1rh1f7b6fveib9tkb1bfcmh30%40group.calendar.google.com/public/basic.ics").then(function() {
+            /* clipboard successfully set */
+            alert("Copied!");
+            }, function() {
+            /* clipboard write failed */
+            });
+            }
+        </script>
+        <style>
+                .box {
+                display: flex;
+                flex-flow: column;
+                height: 100%;
+                }
+                .box .row {
+                    --bs-gutter-x: 0;
+                }
+                .box .row.header {
+                flex: 0 1 auto;
+                /* The above is shorthand for:
+                flex-grow: 0,
+                flex-shrink: 1,
+                flex-basis: auto
+                */
+                }
+
+                .box .row.content {
+                flex: 1 1 auto;
+                }
+
+                .box .row.footer {
+                flex: 0 1 auto;
+                justify-content: center;
+                align-items: center;
+            }
+            @media screen and (min-width: 601px) {
+                .box{
+                    margin: 0 auto;
+                    text-align: center;
+                }
+                .btn {
+                width: 50%
+                }
+                
+            }
+            @media screen and (max-width: 600px) {
+                .box{
+                    width: 100%;
+                    text-align: center;
+                }
+                .btn {
+                font-size: 1rem;
+                width: 100%;
+                }
+                #gcal {
+                    margin-top: 0.5rem!important;
+                    margin-bottom: 0rem!important;
+                }
+                #ical{
+                    margin-top: 0.5rem!important;
+                    margin-bottom: 0.5rem!important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <div class="row header">
+                <h5 style="margin-top: 5px;">
+                    Toushin Events
+                </h5>
+                <p id="countdown"></p>
+            </div>
+            <div id="cal" class="row content"></div>
+            <div class="row footer" style="width:100%;text-align:center;">
+                <button id="gcal" onclick="location.href='https://calendar.google.com/calendar/u/0/render?cid=e1rh1f7b6fveib9tkb1bfcmh30%40group.calendar.google.com';" class="btn btn-primary mb-3">Add to Google Calendar</button>
+                <button id="ical" onclick="copy()" class="btn btn-primary mb-3">Copy iCal link</button>
+            </div>
+        </div>
+    </body>
+</html>
